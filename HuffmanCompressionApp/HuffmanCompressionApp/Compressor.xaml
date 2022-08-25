@@ -1,0 +1,45 @@
+﻿<Page
+    x:Class="HuffmanCompressionApp.Compressor"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:HuffmanCompressionApp"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="10, 30, 10, 0">
+        <TextBlock Text="File To Be Compressed"/>
+        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0, 15, 0, 0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="120"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBox x:Name="FileDirectoryBox" IsEnabled="False" HorizontalAlignment="Stretch" Grid.Column="0"/>
+            <Button x:Name="FileSelectButton" Grid.Column="1" Width="110" HorizontalAlignment="Center" Click="FileSelectButton_Click" Content="Select Input"/>
+        </Grid>
+
+        <TextBlock Text="Output Folder" Margin="0, 15, 0, 0"/>
+        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0, 15, 0, 0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="120"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBox x:Name="FolderDirectoryBox" IsEnabled="False" HorizontalAlignment="Stretch" Grid.Column="0"/>
+            <Button x:Name="FolderSelectButton" Grid.Column="1" Width="110" HorizontalAlignment="Center" Click="FolderSelectButton_Click"  Content="Select Output"/>
+        </Grid>
+
+        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0, 15, 0, 0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="120"/>
+            </Grid.ColumnDefinitions>
+
+            <ProgressBar x:Name="ProgressBar" Grid.Column="0"/>
+            <Button x:Name="StartButton" Grid.Column="1" Width="110" HorizontalAlignment="Center" Content="Compress"/>
+        </Grid>
+
+        <TextBox x:Name="StatusBox" Text="Waiting to compress..." IsEnabled ="False" TextWrapping="Wrap" HorizontalAlignment="Stretch" Margin="0, 20, 0, 0"/>
+    </StackPanel>
+</Page>

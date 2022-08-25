@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="MainWindow.xaml" />
+    <Page Include="Compressor.xaml" />
+    <Page Include="Decompressor.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Midl Include="App.idl" />
+    <Midl Include="MainWindow.idl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
+    <ClCompile Include="CharacterTableNode.cpp">
+      <Filter>HuffmanLibrary</Filter>
+    </ClCompile>
+    <ClCompile Include="CharacterTable.cpp">
+      <Filter>HuffmanLibrary</Filter>
+    </ClCompile>
+    <ClCompile Include="HuffmanDecompressor.cpp">
+      <Filter>HuffmanLibrary</Filter>
+    </ClCompile>
+    <ClCompile Include="HuffmanCompressor.cpp">
+      <Filter>HuffmanLibrary</Filter>
+    </ClCompile>
+    <ClCompile Include="PriorityQueue.cpp">
+      <Filter>HuffmanLibrary</Filter>
+    </ClCompile>
+    <ClCompile Include="TreeNode.cpp">
+      <Filter>HuffmanLibrary</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="CharacterTable.h">
+      <Filter>HuffmanLibrary</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterTableNode.h">
+      <Filter>HuffmanLibrary</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneralConstants.h">
+      <Filter>HuffmanLibrary</Filter>
+    </ClInclude>
+    <ClInclude Include="HuffmanCompressor.h">
+      <Filter>HuffmanLibrary</Filter>
+    </ClInclude>
+    <ClInclude Include="HuffmanDecompressor.h">
+      <Filter>HuffmanLibrary</Filter>
+    </ClInclude>
+    <ClInclude Include="PriorityQueue.h">
+      <Filter>HuffmanLibrary</Filter>
+    </ClInclude>
+    <ClInclude Include="TreeNode.h">
+      <Filter>HuffmanLibrary</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{e48dc53e-40b1-40cb-970a-f89935452892}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HuffmanLibrary">
+      <UniqueIdentifier>{93a333e8-59bc-4d0a-8d56-e48e930b3484}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="readme.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="app.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+</Project>

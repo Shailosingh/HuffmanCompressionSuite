@@ -1,0 +1,57 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32804.467
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "HuffmanCompressionApp (Package)", "HuffmanCompressionApp\HuffmanCompressionApp (Package)\HuffmanCompressionApp (Package).wapproj", "{FD90E254-463E-434A-956B-87522F3F3491}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HuffmanCompressionApp", "HuffmanCompressionApp\HuffmanCompressionApp\HuffmanCompressionApp.vcxproj", "{DB7DB764-1361-46A2-9989-ADD0494649B2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|arm64 = Debug|arm64
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|arm64 = Release|arm64
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FD90E254-463E-434A-956B-87522F3F3491}.Debug|arm64.ActiveCfg = Debug|arm64
+		{FD90E254-463E-434A-956B-87522F3F3491}.Debug|arm64.Build.0 = Debug|arm64
+		{FD90E254-463E-434A-956B-87522F3F3491}.Debug|arm64.Deploy.0 = Debug|arm64
+		{FD90E254-463E-434A-956B-87522F3F3491}.Debug|x64.ActiveCfg = Debug|x64
+		{FD90E254-463E-434A-956B-87522F3F3491}.Debug|x64.Build.0 = Debug|x64
+		{FD90E254-463E-434A-956B-87522F3F3491}.Debug|x64.Deploy.0 = Debug|x64
+		{FD90E254-463E-434A-956B-87522F3F3491}.Debug|x86.ActiveCfg = Debug|x86
+		{FD90E254-463E-434A-956B-87522F3F3491}.Debug|x86.Build.0 = Debug|x86
+		{FD90E254-463E-434A-956B-87522F3F3491}.Debug|x86.Deploy.0 = Debug|x86
+		{FD90E254-463E-434A-956B-87522F3F3491}.Release|arm64.ActiveCfg = Release|arm64
+		{FD90E254-463E-434A-956B-87522F3F3491}.Release|arm64.Build.0 = Release|arm64
+		{FD90E254-463E-434A-956B-87522F3F3491}.Release|arm64.Deploy.0 = Release|arm64
+		{FD90E254-463E-434A-956B-87522F3F3491}.Release|x64.ActiveCfg = Release|x64
+		{FD90E254-463E-434A-956B-87522F3F3491}.Release|x64.Build.0 = Release|x64
+		{FD90E254-463E-434A-956B-87522F3F3491}.Release|x64.Deploy.0 = Release|x64
+		{FD90E254-463E-434A-956B-87522F3F3491}.Release|x86.ActiveCfg = Release|x86
+		{FD90E254-463E-434A-956B-87522F3F3491}.Release|x86.Build.0 = Release|x86
+		{FD90E254-463E-434A-956B-87522F3F3491}.Release|x86.Deploy.0 = Release|x86
+		{DB7DB764-1361-46A2-9989-ADD0494649B2}.Debug|arm64.ActiveCfg = Debug|arm64
+		{DB7DB764-1361-46A2-9989-ADD0494649B2}.Debug|arm64.Build.0 = Debug|arm64
+		{DB7DB764-1361-46A2-9989-ADD0494649B2}.Debug|x64.ActiveCfg = Debug|x64
+		{DB7DB764-1361-46A2-9989-ADD0494649B2}.Debug|x64.Build.0 = Debug|x64
+		{DB7DB764-1361-46A2-9989-ADD0494649B2}.Debug|x86.ActiveCfg = Debug|Win32
+		{DB7DB764-1361-46A2-9989-ADD0494649B2}.Debug|x86.Build.0 = Debug|Win32
+		{DB7DB764-1361-46A2-9989-ADD0494649B2}.Release|arm64.ActiveCfg = Release|arm64
+		{DB7DB764-1361-46A2-9989-ADD0494649B2}.Release|arm64.Build.0 = Release|arm64
+		{DB7DB764-1361-46A2-9989-ADD0494649B2}.Release|x64.ActiveCfg = Release|x64
+		{DB7DB764-1361-46A2-9989-ADD0494649B2}.Release|x64.Build.0 = Release|x64
+		{DB7DB764-1361-46A2-9989-ADD0494649B2}.Release|x86.ActiveCfg = Release|Win32
+		{DB7DB764-1361-46A2-9989-ADD0494649B2}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1D95F9F5-A099-4AC6-97E8-9399AC6623FB}
+	EndGlobalSection
+EndGlobal

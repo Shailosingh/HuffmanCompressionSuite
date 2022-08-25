@@ -1,0 +1,9 @@
+namespace HuffmanCompressionApp
+{
+    [default_interface]
+    runtimeclass Decompressor : Microsoft.UI.Xaml.Controls.Page
+    {
+        Decompressor();
+        Int32 MyProperty;
+    }
+}
