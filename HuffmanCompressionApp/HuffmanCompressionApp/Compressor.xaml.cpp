@@ -2,8 +2,6 @@
 #include "Compressor.xaml.h"
 #if __has_include("Compressor.g.cpp")
 #include "Compressor.g.cpp"
-#include "HuffmanCompressor.h"
-#include "GeneralConstants.h"
 #endif
 
 using namespace winrt;
@@ -31,7 +29,7 @@ namespace winrt::HuffmanCompressionApp::implementation
 
     //https://cplusplus.com/forum/windows/275617/
     //https://docs.microsoft.com/en-us/windows/win32/shell/common-file-dialog#specifying-file-types-for-a-dialog
-    void winrt::HuffmanCompressionApp::implementation::Compressor::FileSelectButton_Click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e)
+    void Compressor::FileSelectButton_Click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e)
     {
         //Make window unclickable (find a way to disable HuffmanMenu from page)
         
@@ -103,11 +101,8 @@ namespace winrt::HuffmanCompressionApp::implementation
         //Let the user click the window again
     }
 
-    void winrt::HuffmanCompressionApp::implementation::Compressor::FolderSelectButton_Click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e)
+    void Compressor::FolderSelectButton_Click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e)
     {
-        //https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-_fileopendialogoptions
-        //FOS_PICKFOLDERS
-
         //Make window unclickable (find a way to disable HuffmanMenu from page)
 
 
@@ -143,7 +138,7 @@ namespace winrt::HuffmanCompressionApp::implementation
         }
 
         //Setup the title of file dialog
-        hr = folderOpener->SetTitle(L"Choose a folder to compress!");
+        hr = folderOpener->SetTitle(L"Choose a folder for compressed file to be placed in");
         if (!SUCCEEDED(hr))
         {
             StatusBox().Text(L"Unable to set title of file dialog!");

@@ -18,7 +18,7 @@ public:
 	/// Creates character table out of file to be compressed
 	/// </summary>
 	/// <param name="decompressedFilePath">Uncompressed file</param>
-	CharacterTable(std::string decompressedFilePath); 
+	CharacterTable(std::wstring decompressedFilePath); 
 
 	/// <summary>
 	/// Creates character table out of file being decompressed

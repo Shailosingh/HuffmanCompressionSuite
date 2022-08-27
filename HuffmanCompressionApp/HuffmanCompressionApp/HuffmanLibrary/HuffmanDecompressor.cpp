@@ -1,9 +1,10 @@
-#include "pch.h"
+#include <pch.h>
 #include "GeneralConstants.h"
 #include "HuffmanDecompressor.h"
 #include "PriorityQueue.h"
 #include <fstream>
 #include <filesystem>
+#include <Windows.h>
 namespace fs = std::filesystem;
 
 //Constructors---------------------------------------------------------------------------------------------------------------
@@ -17,11 +18,11 @@ HuffmanDecompressor::HuffmanDecompressor()
 	ExitError = false;
 	BitCounter = 0;
 	TotalBitCount = 1;
-	StatusMessage = "Ready to go!\n";
+	StatusMessage = L"Ready to go!\n";
 }
 
 //Public functions-----------------------------------------------------------------------------------------------------------
-void HuffmanDecompressor::BeginDecompression(std::string inputFilePath, std::string outputFolderPath)
+void HuffmanDecompressor::BeginDecompression(std::wstring inputFilePath, std::wstring outputFolderPath)
 {
 	//Clear object to defaults
 	ResetMembers();
@@ -33,34 +34,34 @@ void HuffmanDecompressor::BeginDecompression(std::string inputFilePath, std::str
 	//Ensure that input and output paths even exist
 	if (!fs::exists(inputPathObject))
 	{
-		SetupErrorMessage("The input file does not exist.\n");
+		SetupErrorMessage(L"The input file does not exist.\n");
 		return;
 	}
 
 	if (!fs::exists(outputPathObject))
 	{
-		SetupErrorMessage("The output folder does not exist.\n");
+		SetupErrorMessage(L"The output folder does not exist.\n");
 		return;
 	}
 
 	//Ensure that the input is an actual file
 	if (!fs::is_regular_file(inputPathObject))
 	{
-		SetupErrorMessage("The input file is not an actual file.\n");
+		SetupErrorMessage(L"The input file is not an actual file.\n");
 		return;
 	}
 
 	//Ensure that the input is an actual file
 	if (!fs::is_directory(outputPathObject))
 	{
-		SetupErrorMessage("The input file is not an actual file.\n");
+		SetupErrorMessage(L"The input file is not an actual file.\n");
 		return;
 	}
 
 	//Ensure that the input's extension is the correct one for files compressed with this program
-	if (inputPathObject.extension().string() != COMPRESSED_EXTENSION)
+	if (inputPathObject.extension().wstring() != COMPRESSED_EXTENSION)
 	{
-		SetupErrorMessage("The input file is invalid. Wrong extension!\n");
+		SetupErrorMessage(L"The input file is invalid. Wrong extension!\n");
 		return;
 	}
 	FileAndDirectoryValidated = true;
@@ -71,19 +72,19 @@ void HuffmanDecompressor::BeginDecompression(std::string inputFilePath, std::str
 	fileReader >> std::noskipws;
 	if (!fileReader)
 	{
-		SetupErrorMessage("Unable to open input file to be decompressed!\n");
+		SetupErrorMessage(L"Unable to open input file to be decompressed!\n");
 		return;
 	}
 
 	//Get the soon to be decompressed file's extension and handle any corruption errors
-	std::string extension;
+	std::wstring extension;
 	try
 	{
 		extension = GetDecompressedFileExtension(fileReader);
 	}
 	catch (const std::invalid_argument& ia)
 	{
-		SetupErrorMessage(ia.what());
+		SetupErrorMessage(ConvertNarrowStringToWideString(ia.what()));
 		return;
 	}
 	RecordedFileExtension = true;
@@ -96,7 +97,7 @@ void HuffmanDecompressor::BeginDecompression(std::string inputFilePath, std::str
 	}
 	catch (const std::invalid_argument& ia)
 	{
-		SetupErrorMessage(ia.what());
+		SetupErrorMessage(ConvertNarrowStringToWideString(ia.what()));
 		return;
 	}
 	CharacterTableFinished = true;
@@ -112,7 +113,7 @@ void HuffmanDecompressor::BeginDecompression(std::string inputFilePath, std::str
 	}
 	catch (const std::invalid_argument& ia)
 	{
-		SetupErrorMessage(ia.what());
+		SetupErrorMessage(ConvertNarrowStringToWideString(ia.what()));
 		return;
 	}
 
@@ -120,13 +121,13 @@ void HuffmanDecompressor::BeginDecompression(std::string inputFilePath, std::str
 	fileReader.close();
 	
 	//Success reached
-	StatusMessage = "Decompression Complete!\n";
+	StatusMessage = L"Decompression Complete!\n";
 	ExitError = false;
 	IsFinished = true;
 }
 
 //Private functions----------------------------------------------------------------------------------------------------------
-std::string HuffmanDecompressor::GetDecompressedFileExtension(std::ifstream& fileReader)
+std::wstring HuffmanDecompressor::GetDecompressedFileExtension(std::ifstream& fileReader)
 {
 	//Get the size of the decompressed file extension
 	uint16_t sizeOfExtension;
@@ -142,12 +143,12 @@ std::string HuffmanDecompressor::GetDecompressedFileExtension(std::ifstream& fil
 	}
 
 	//Create buffer and fill it with the file extension
-	char* extensionBuffer = new char[sizeOfExtension];
-	if (!fileReader.read(extensionBuffer, sizeof(char) * sizeOfExtension))
+	wchar_t* extensionBuffer = new wchar_t[sizeOfExtension];
+	if (!fileReader.read(reinterpret_cast<char*>(extensionBuffer), sizeof(wchar_t) * sizeOfExtension))
 	{
 		throw std::invalid_argument("Input file corrupt or catastrophic error occured!\n");
 	}
-	std::string extensionString(extensionBuffer);
+	std::wstring extensionString(extensionBuffer);
 	
 	//Delete the buffer as it isn't needed anymore
 	delete[] extensionBuffer;
@@ -155,7 +156,7 @@ std::string HuffmanDecompressor::GetDecompressedFileExtension(std::ifstream& fil
 	return extensionString;
 }
 
-void HuffmanDecompressor::WriteDecompressedFile(fs::path& inputPathObject, fs::path& outputPathObject, std::string& extension, std::ifstream& fileReader, TreeNode* huffmanTree)
+void HuffmanDecompressor::WriteDecompressedFile(fs::path& inputPathObject, fs::path& outputPathObject, std::wstring& extension, std::ifstream& fileReader, TreeNode* huffmanTree)
 {
 	//Get the number of huffman coding bits to come
 	uint64_t totalBits;
@@ -200,12 +201,23 @@ void HuffmanDecompressor::ResetMembers()
 	ExitError = false;
 	BitCounter = 0;
 	TotalBitCount = 1;
-	StatusMessage = "Ready to go!\n";
+	StatusMessage = L"Ready to go!\n";
 }
 
-void HuffmanDecompressor::SetupErrorMessage(std::string errorMessage)
+void HuffmanDecompressor::SetupErrorMessage(std::wstring errorMessage)
 {
 	ExitError = true;
 	IsFinished = true;
 	StatusMessage = errorMessage;
+}
+
+std::wstring HuffmanDecompressor::ConvertNarrowStringToWideString(const std::string& narrowString) const
+{
+	//Allocates a wide string of appropriate size for conversion from narrow string
+	int neededWideBufferSize = MultiByteToWideChar(CP_UTF8, 0, narrowString.c_str(), -1, NULL, 0);
+	std::wstring wideString(neededWideBufferSize, 0);
+
+	//Fills and returns the wide string
+	MultiByteToWideChar(CP_UTF8, 0, narrowString.c_str(), -1, &wideString[0], neededWideBufferSize);
+	return wideString;
 }

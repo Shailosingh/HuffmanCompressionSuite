@@ -14,7 +14,7 @@ private:
 	/// </summary>
 	/// <param name="fileReader">File handler for binary reading of compressed file</param>
 	/// <returns>Extension of soon to be decompressed file</returns>
-	std::string GetDecompressedFileExtension(std::ifstream& fileReader);
+	std::wstring GetDecompressedFileExtension(std::ifstream& fileReader);
 
 	/// <summary>
 	/// Writes decompressed file into the output path, using the input compressed file
@@ -24,7 +24,7 @@ private:
 	/// <param name="extension">Extension of soon to be decompressed file</param>
 	/// <param name="fileReader">Open file handle to the input compressed file. Ready to read the number of bits in the upcoming huffman coding.</param>
 	/// <param name="huffmanTree">Head of huffman tree for compressed file</param>
-	void WriteDecompressedFile(fs::path& inputPathObject, fs:: path& outputPathObject, std::string& extension, std::ifstream& fileReader, TreeNode* huffmanTree);
+	void WriteDecompressedFile(fs::path& inputPathObject, fs:: path& outputPathObject, std::wstring& extension, std::ifstream& fileReader, TreeNode* huffmanTree);
 
 	/// <summary>
 	/// Resets all members (status indicators) to default settings
@@ -35,7 +35,14 @@ private:
 	/// Puts the decompressor into error state, passing an error message
 	/// </summary>
 	/// <param name="errorMessage">Error message to be passed</param>
-	void SetupErrorMessage(std::string errorMessage);
+	void SetupErrorMessage(std::wstring errorMessage);
+
+	/// <summary>
+	/// Converts any string to a wstring, taking into account multibyte/unicode characters
+	/// </summary>
+	/// <param name="wideString">Reference to narrow string to be converted</param>
+	/// <returns>Converted wide string</returns>
+	std::wstring ConvertNarrowStringToWideString(const std::string& narrowString) const;
 
 public:
 	bool FileAndDirectoryValidated;
@@ -46,7 +53,7 @@ public:
 	bool ExitError;
 	uint64_t BitCounter;
 	uint64_t TotalBitCount;
-	std::string StatusMessage;
+	std::wstring StatusMessage;
 
 	/// <summary>
 	/// Constructor for decompressor. Will get the object ready to start compression process
@@ -58,5 +65,5 @@ public:
 	/// </summary>
 	/// <param name="inputFilePath">Path to file to be decompressed</param>
 	/// <param name="outputFolderPath">Path to folder where decompressed file shall be placed</param>
-	void BeginDecompression(std::string inputFilePath, std::string outputFolderPath);
+	void BeginDecompression(std::wstring inputFilePath, std::wstring outputFolderPath);
 };

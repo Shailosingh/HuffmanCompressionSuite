@@ -1,8 +1,9 @@
-#include "pch.h"
+#include <pch.h>
 #include "HuffmanCompressor.h"
 #include "GeneralConstants.h"
 #include <fstream>
 #include <filesystem>
+#include <Windows.h>
 namespace fs = std::filesystem;
 
 //Constructors---------------------------------------------------------------------------------------------------------------
@@ -15,11 +16,11 @@ HuffmanCompressor::HuffmanCompressor()
 	ExitError = false;
 	BitCounter = 0;
 	TotalBitCount = 1;
-	StatusMessage = "Ready To Start!\n";
+	StatusMessage = L"Ready To Start!\n";
 }
 
 //Public functions-----------------------------------------------------------------------------------------------------------
-void HuffmanCompressor::BeginCompression(std::string inputFilePath, std::string outputFolderPath)
+void HuffmanCompressor::BeginCompression(std::wstring inputFilePath, std::wstring outputFolderPath)
 {
 	//Clear object to defaults
 	ResetMembers();
@@ -31,27 +32,27 @@ void HuffmanCompressor::BeginCompression(std::string inputFilePath, std::string 
 	//Ensure that input and output paths even exist
 	if (!fs::exists(inputPathObject))
 	{
-		SetupErrorMessage("The input file does not exist.\n");
+		SetupErrorMessage(L"The input file does not exist.\n");
 		return;
 	}
 
 	if (!fs::exists(outputPathObject))
 	{
-		SetupErrorMessage("The output folder does not exist.\n");
+		SetupErrorMessage(L"The output folder does not exist.\n");
 		return;
 	}
 
 	//Ensure that the input is an actual file
 	if (!fs::is_regular_file(inputPathObject))
 	{
-		SetupErrorMessage("The input file is not an actual file.\n");
+		SetupErrorMessage(L"The input file is not an actual file.\n");
 		return;
 	}
 
 	//Ensure that the input is an actual file
 	if (!fs::is_directory(outputPathObject))
 	{
-		SetupErrorMessage("The input file is not an actual file.\n");
+		SetupErrorMessage(L"The input file is not an actual file.\n");
 		return;
 	}
 	FileAndDirectoryValidated = true;
@@ -65,7 +66,7 @@ void HuffmanCompressor::BeginCompression(std::string inputFilePath, std::string 
 	//Catch block will be executed if the input file couldn't be opened
 	catch (const std::invalid_argument& ia)
 	{
-		SetupErrorMessage(ia.what());
+		SetupErrorMessage(ConvertNarrowStringToWideString(ia.what()));
 		return;
 	}
 	CharacterTableFinished = true;
@@ -82,12 +83,12 @@ void HuffmanCompressor::BeginCompression(std::string inputFilePath, std::string 
 	//Catch block will be executed if any files could not be opened
 	catch (const std::invalid_argument& ia)
 	{
-		SetupErrorMessage(ia.what());
+		SetupErrorMessage(ConvertNarrowStringToWideString(ia.what()));
 		return;
 	}
 
 	//If it got here, the compressed file is successfully created
-	StatusMessage = "Compression Complete!\n";
+	StatusMessage = L"Compression Complete!\n";
 	ExitError = false;
 	IsFinished = true;
 }
@@ -102,16 +103,16 @@ void HuffmanCompressor::ResetMembers()
 	ExitError = false;
 	BitCounter = 0;
 	TotalBitCount = 1;
-	StatusMessage = "Ready To Start!\n";
+	StatusMessage = L"Ready To Start!\n";
 }
 
-void HuffmanCompressor::SetupErrorMessage(std::string errorMessage)
+void HuffmanCompressor::SetupErrorMessage(std::wstring errorMessage)
 {
 	ExitError = true;
 	IsFinished = true;
 	StatusMessage = errorMessage;
 }
-void HuffmanCompressor::WriteCompressedFile(CharacterTable& table, std::string inputFilePath, std::string outputFolderPath)
+void HuffmanCompressor::WriteCompressedFile(CharacterTable& table, std::wstring inputFilePath, std::wstring outputFolderPath)
 {
 	//Create full path to the output compressed file
 	fs::path inputFileName = fs::path(inputFilePath).filename();
@@ -128,13 +129,13 @@ void HuffmanCompressor::WriteCompressedFile(CharacterTable& table, std::string i
 		throw std::invalid_argument("Error in creating and opening compressed output file.\n");
 	}
 
-	//Record the input file's extension and its size
-	std::string inputFileExtension = inputFileName.extension().string();
-	uint16_t cStringExtensionSize = inputFileExtension.length()+1; //Uses 16 bits, since the extension can't have more than 256 (including null) because of filename length restrictions
+	//Record the input file's size and its extension
+	std::wstring inputFileExtension = inputFileName.extension().wstring();
+	uint16_t cStringExtensionSize = inputFileExtension.length()+1; //Uses 16 bits, since the extension can't have more than 256 characters (512 bytes, including null) because of filename length restrictions
 	outputWriter.write(reinterpret_cast<char*>(&cStringExtensionSize), sizeof(uint16_t));
 
-	const char* cStringExtension = inputFileExtension.c_str();
-	outputWriter.write(cStringExtension, cStringExtensionSize);
+	const wchar_t* cStringExtension = inputFileExtension.c_str();
+	outputWriter.write(reinterpret_cast<const char*>(cStringExtension), sizeof(wchar_t)*cStringExtensionSize);
 
 	//Write the number of unique characters in the input to the output file
 	uint64_t numOfUniqueChars = table.CharacterMap.size();
@@ -203,4 +204,15 @@ void HuffmanCompressor::WriteCompressedFile(CharacterTable& table, std::string i
 
 	//Close out the output file
 	outputWriter.close();
+}
+
+std::wstring HuffmanCompressor::ConvertNarrowStringToWideString(const std::string& narrowString) const
+{
+	//Allocates a wide string of appropriate size for conversion from narrow string
+	int neededWideBufferSize = MultiByteToWideChar(CP_UTF8, 0, narrowString.c_str(), -1, NULL, 0);
+	std::wstring wideString(neededWideBufferSize, 0);
+
+	//Fills and returns the wide string
+	MultiByteToWideChar(CP_UTF8, 0, narrowString.c_str(), -1, &wideString[0], neededWideBufferSize);
+	return wideString;
 }

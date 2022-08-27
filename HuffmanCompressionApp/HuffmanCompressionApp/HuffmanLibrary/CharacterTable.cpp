@@ -1,9 +1,9 @@
-#include "pch.h"
+#include <pch.h>
 #include "CharacterTable.h"
 #include <fstream>
 
 //Constructors---------------------------------------------------------------------------------------------------------------
-CharacterTable::CharacterTable(std::string decompressedFilePath)
+CharacterTable::CharacterTable(std::wstring decompressedFilePath)
 {
 	//Open file for reading binary
 	std::ifstream fileReader;

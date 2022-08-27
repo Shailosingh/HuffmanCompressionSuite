@@ -16,7 +16,7 @@
             </Grid.ColumnDefinitions>
 
             <TextBox x:Name="FileDirectoryBox" IsEnabled="False" HorizontalAlignment="Stretch" Grid.Column="0"/>
-            <Button x:Name="FileSelectButton" Grid.Column="1" Width="110" HorizontalAlignment="Center" Click="FileSelectButton_Click" Content="Select Input"/>
+            <Button x:Name="FileSelectButton" Grid.Column="1" Width="110" HorizontalAlignment="Center" Click="FileSelectButton_Click"  Content="Select Input"/>
         </Grid>
 
         <TextBlock Text="Output Folder" Margin="0, 15, 0, 0"/>

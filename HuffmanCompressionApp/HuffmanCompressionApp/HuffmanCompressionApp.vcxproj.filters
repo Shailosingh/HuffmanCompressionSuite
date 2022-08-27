@@ -15,46 +15,46 @@
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
-    <ClCompile Include="CharacterTableNode.cpp">
+    <ClCompile Include="HuffmanLibrary\CharacterTableNode.cpp">
       <Filter>HuffmanLibrary</Filter>
     </ClCompile>
-    <ClCompile Include="CharacterTable.cpp">
+    <ClCompile Include="HuffmanLibrary\HuffmanCompressor.cpp">
       <Filter>HuffmanLibrary</Filter>
     </ClCompile>
-    <ClCompile Include="HuffmanDecompressor.cpp">
+    <ClCompile Include="HuffmanLibrary\HuffmanDecompressor.cpp">
       <Filter>HuffmanLibrary</Filter>
     </ClCompile>
-    <ClCompile Include="HuffmanCompressor.cpp">
+    <ClCompile Include="HuffmanLibrary\PriorityQueue.cpp">
       <Filter>HuffmanLibrary</Filter>
     </ClCompile>
-    <ClCompile Include="PriorityQueue.cpp">
+    <ClCompile Include="HuffmanLibrary\TreeNode.cpp">
       <Filter>HuffmanLibrary</Filter>
     </ClCompile>
-    <ClCompile Include="TreeNode.cpp">
+    <ClCompile Include="HuffmanLibrary\CharacterTable.cpp">
       <Filter>HuffmanLibrary</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
-    <ClInclude Include="CharacterTable.h">
+    <ClInclude Include="HuffmanLibrary\CharacterTableNode.h">
       <Filter>HuffmanLibrary</Filter>
     </ClInclude>
-    <ClInclude Include="CharacterTableNode.h">
+    <ClInclude Include="HuffmanLibrary\GeneralConstants.h">
       <Filter>HuffmanLibrary</Filter>
     </ClInclude>
-    <ClInclude Include="GeneralConstants.h">
+    <ClInclude Include="HuffmanLibrary\HuffmanCompressor.h">
       <Filter>HuffmanLibrary</Filter>
     </ClInclude>
-    <ClInclude Include="HuffmanCompressor.h">
+    <ClInclude Include="HuffmanLibrary\HuffmanDecompressor.h">
       <Filter>HuffmanLibrary</Filter>
     </ClInclude>
-    <ClInclude Include="HuffmanDecompressor.h">
+    <ClInclude Include="HuffmanLibrary\PriorityQueue.h">
       <Filter>HuffmanLibrary</Filter>
     </ClInclude>
-    <ClInclude Include="PriorityQueue.h">
+    <ClInclude Include="HuffmanLibrary\TreeNode.h">
       <Filter>HuffmanLibrary</Filter>
     </ClInclude>
-    <ClInclude Include="TreeNode.h">
+    <ClInclude Include="HuffmanLibrary\CharacterTable.h">
       <Filter>HuffmanLibrary</Filter>
     </ClInclude>
   </ItemGroup>
@@ -63,7 +63,7 @@
       <UniqueIdentifier>{e48dc53e-40b1-40cb-970a-f89935452892}</UniqueIdentifier>
     </Filter>
     <Filter Include="HuffmanLibrary">
-      <UniqueIdentifier>{93a333e8-59bc-4d0a-8d56-e48e930b3484}</UniqueIdentifier>
+      <UniqueIdentifier>{bd5bf28e-4a16-4972-af46-c0cdeb991369}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
