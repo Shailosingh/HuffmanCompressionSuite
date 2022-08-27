@@ -10,6 +10,7 @@ namespace winrt::HuffmanCompressionApp::implementation
         int32_t MyProperty();
         void MyProperty(int32_t value);
         void HuffmanMenu_ItemInvoked(winrt::Microsoft::UI::Xaml::Controls::NavigationView const& sender, winrt::Microsoft::UI::Xaml::Controls::NavigationViewItemInvokedEventArgs const& args);
+
     };
 }
 
