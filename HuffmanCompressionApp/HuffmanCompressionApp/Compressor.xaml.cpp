@@ -27,13 +27,19 @@ namespace winrt::HuffmanCompressionApp::implementation
         throw hresult_not_implemented();
     }
 
+    //Helpers--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    void Compressor::WindowClickableToggle(bool isClickable)
+    {
+        FileSelectButton().IsEnabled(isClickable);
+        FolderSelectButton().IsEnabled(isClickable);
+        StartButton().IsEnabled(isClickable);
+    }
+
+    //Event handlers-------------------------------------------------------------------------------------------------------------------------------------------------------------------
     //https://cplusplus.com/forum/windows/275617/
     //https://docs.microsoft.com/en-us/windows/win32/shell/common-file-dialog#specifying-file-types-for-a-dialog
     void Compressor::FileSelectButton_Click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e)
     {
-        //Make window unclickable (find a way to disable HuffmanMenu from page)
-        
-
         //Setup file dialog
         IFileOpenDialog* fileOpener = nullptr;
         HRESULT hr = CoCreateInstance(CLSID_FileOpenDialog,           // Class ID for the FileOpenFialog
@@ -56,7 +62,8 @@ namespace winrt::HuffmanCompressionApp::implementation
         }
 
         //Show the dialog and wait for the selected file
-        hr = fileOpener->Show(NULL);
+        //To ensure the dialog is modal, give it the HWND (https://stackoverflow.com/questions/42596788/how-can-i-open-an-modal-file-dialog-with-ifileopendialog)
+        hr = fileOpener->Show(GetActiveWindow());
         if (!SUCCEEDED(hr))
         {
             StatusBox().Text(L"Unable to show the file dialog!");
@@ -97,15 +104,10 @@ namespace winrt::HuffmanCompressionApp::implementation
 
         //Success message
         StatusBox().Text(L"Waiting to compress...");
-
-        //Let the user click the window again
     }
 
     void Compressor::FolderSelectButton_Click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e)
     {
-        //Make window unclickable (find a way to disable HuffmanMenu from page)
-
-
         //Setup file dialog
         IFileOpenDialog* folderOpener = nullptr;
         HRESULT hr = CoCreateInstance(CLSID_FileOpenDialog,           // Class ID for the FileOpenFialog
@@ -129,6 +131,7 @@ namespace winrt::HuffmanCompressionApp::implementation
         }
 
         //Force the dialog to only allow selection of folders
+        //To ensure the dialog is modal, give it the HWND (https://stackoverflow.com/questions/42596788/how-can-i-open-an-modal-file-dialog-with-ifileopendialog)
         hr = folderOpener->SetOptions(optionFlags | FOS_PICKFOLDERS);
         if (!SUCCEEDED(hr))
         {
@@ -147,7 +150,7 @@ namespace winrt::HuffmanCompressionApp::implementation
         }
 
         //Show the dialog and wait for the selected file
-        hr = folderOpener->Show(NULL);
+        hr = folderOpener->Show(GetActiveWindow());
         if (!SUCCEEDED(hr))
         {
             StatusBox().Text(L"Unable to show the file dialog!");
@@ -188,7 +191,5 @@ namespace winrt::HuffmanCompressionApp::implementation
 
         //Success message
         StatusBox().Text(L"Waiting to compress...");
-
-        //Let the user click the window again
     }
 }
