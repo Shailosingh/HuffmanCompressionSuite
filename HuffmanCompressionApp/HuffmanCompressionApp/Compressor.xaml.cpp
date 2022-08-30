@@ -10,10 +10,15 @@ using namespace Microsoft::UI::Xaml;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
+//To disable window: https://docs.microsoft.com/en-ca/windows/win32/api/winuser/nf-winuser-enablewindow?redirectedfrom=MSDN
+
 namespace winrt::HuffmanCompressionApp::implementation
 {
     Compressor::Compressor()
     {
+        //Initialize datafield (it should be truly filled in OnNavigatedTo)
+        WindowHandle = NULL;
+
         InitializeComponent();
     }
 
@@ -27,17 +32,20 @@ namespace winrt::HuffmanCompressionApp::implementation
         throw hresult_not_implemented();
     }
 
-    //Helpers--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    void Compressor::WindowClickableToggle(bool isClickable)
-    {
-        FileSelectButton().IsEnabled(isClickable);
-        FolderSelectButton().IsEnabled(isClickable);
-        StartButton().IsEnabled(isClickable);
-    }
-
     //Event handlers-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    void Compressor::OnNavigatedTo(Microsoft::UI::Xaml::Navigation::NavigationEventArgs const& e)
+    {
+        //Retrieves the MainWindow's handle
+        Window window = e.Parameter().as<Window>();
+        auto windowNative{ window.try_as<::IWindowNative>() };
+        winrt::check_bool(windowNative);
+        WindowHandle = { 0 };
+        windowNative->get_WindowHandle(&WindowHandle);
+    }
+    
     //https://cplusplus.com/forum/windows/275617/
     //https://docs.microsoft.com/en-us/windows/win32/shell/common-file-dialog#specifying-file-types-for-a-dialog
+    //Strongly consider switching to the FileOpenPicker: https://github.com/microsoft/Windows-universal-samples/blob/main/Samples/FilePicker/cppwinrt/Scenario1_SingleFile.cpp
     void Compressor::FileSelectButton_Click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e)
     {
         //Setup file dialog
@@ -63,7 +71,7 @@ namespace winrt::HuffmanCompressionApp::implementation
 
         //Show the dialog and wait for the selected file
         //To ensure the dialog is modal, give it the HWND (https://stackoverflow.com/questions/42596788/how-can-i-open-an-modal-file-dialog-with-ifileopendialog)
-        hr = fileOpener->Show(GetActiveWindow());
+        hr = fileOpener->Show(WindowHandle);
         if (!SUCCEEDED(hr))
         {
             StatusBox().Text(L"Unable to show the file dialog!");
@@ -150,7 +158,7 @@ namespace winrt::HuffmanCompressionApp::implementation
         }
 
         //Show the dialog and wait for the selected file
-        hr = folderOpener->Show(GetActiveWindow());
+        hr = folderOpener->Show(WindowHandle);
         if (!SUCCEEDED(hr))
         {
             StatusBox().Text(L"Unable to show the file dialog!");
@@ -191,5 +199,11 @@ namespace winrt::HuffmanCompressionApp::implementation
 
         //Success message
         StatusBox().Text(L"Waiting to compress...");
+    }
+
+    void Compressor::StartButton_Click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e)
+    {
+        //Disable the window
+        EnableWindow(WindowHandle, false);
     }
 }

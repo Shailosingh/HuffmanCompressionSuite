@@ -15,6 +15,9 @@ namespace winrt::HuffmanCompressionApp::implementation
 {
     Decompressor::Decompressor()
     {
+        //Initialize datafield (it should be truly filled in OnNavigatedTo)
+        WindowHandle = NULL;
+
         InitializeComponent();
     }
 
@@ -28,15 +31,17 @@ namespace winrt::HuffmanCompressionApp::implementation
         throw hresult_not_implemented();
     }
 
-    //Helpers--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    void Decompressor::WindowClickableToggle(bool isClickable)
-    {
-        FileSelectButton().IsEnabled(isClickable);
-        FolderSelectButton().IsEnabled(isClickable);
-        StartButton().IsEnabled(isClickable);
-    }
-
     //Event handlers-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    void Decompressor::OnNavigatedTo(Microsoft::UI::Xaml::Navigation::NavigationEventArgs const& e)
+    {
+        //Retrieves the MainWindow's handle
+        Window window = e.Parameter().as<Window>();
+        auto windowNative{ window.try_as<::IWindowNative>() };
+        winrt::check_bool(windowNative);
+        WindowHandle = { 0 };
+        windowNative->get_WindowHandle(&WindowHandle);
+    }
+    
     void Decompressor::FileSelectButton_Click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e)
     {
         //Setup file dialog
@@ -73,7 +78,7 @@ namespace winrt::HuffmanCompressionApp::implementation
 
         //Show the dialog and wait for the selected file
         //To ensure the dialog is modal, give it the HWND (https://stackoverflow.com/questions/42596788/how-can-i-open-an-modal-file-dialog-with-ifileopendialog)
-        hr = fileOpener->Show(GetActiveWindow());
+        hr = fileOpener->Show(WindowHandle);
         if (!SUCCEEDED(hr))
         {
             StatusBox().Text(L"Unable to show the file dialog!");
@@ -161,7 +166,7 @@ namespace winrt::HuffmanCompressionApp::implementation
 
         //Show the dialog and wait for the selected file
         //To ensure the dialog is modal, give it the HWND (https://stackoverflow.com/questions/42596788/how-can-i-open-an-modal-file-dialog-with-ifileopendialog)
-        hr = folderOpener->Show(GetActiveWindow());
+        hr = folderOpener->Show(WindowHandle);
         if (!SUCCEEDED(hr))
         {
             StatusBox().Text(L"Unable to show the file dialog!");
@@ -202,5 +207,12 @@ namespace winrt::HuffmanCompressionApp::implementation
 
         //Success message
         StatusBox().Text(L"Waiting to compress...");
+    }
+
+    void Decompressor::StartButton_Click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e)
+    {
+        //Disable the window
+        EnableWindow(WindowHandle, false);
+
     }
 }

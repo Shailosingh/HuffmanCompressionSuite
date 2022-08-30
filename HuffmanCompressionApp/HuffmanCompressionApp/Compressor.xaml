@@ -37,7 +37,7 @@
             </Grid.ColumnDefinitions>
 
             <ProgressBar x:Name="ProgressBar" Grid.Column="0"/>
-            <Button x:Name="StartButton" Grid.Column="1" Width="110" HorizontalAlignment="Center" Content="Compress"/>
+            <Button x:Name="StartButton" Grid.Column="1" Width="110" HorizontalAlignment="Center" Content="Compress" Click="StartButton_Click"/>
         </Grid>
 
         <TextBox x:Name="StatusBox" Text="Waiting to compress..." IsEnabled ="False" TextWrapping="Wrap" HorizontalAlignment="Stretch" Margin="0, 20, 0, 0"/>

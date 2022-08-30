@@ -41,12 +41,12 @@ namespace winrt::HuffmanCompressionApp::implementation
 
             if (tagValue == L"Compressor")
             {
-                ContentFrame().Navigate(xaml_typename<HuffmanCompressionApp::Compressor>());
+                ContentFrame().Navigate(xaml_typename<HuffmanCompressionApp::Compressor>(),*this);
             }
 
             else if (tagValue == L"Decompressor")
             {
-                ContentFrame().Navigate(xaml_typename<HuffmanCompressionApp::Decompressor>());
+                ContentFrame().Navigate(xaml_typename<HuffmanCompressionApp::Decompressor>(), *this);
             }
         }
     }

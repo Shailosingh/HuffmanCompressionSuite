@@ -6,17 +6,19 @@ namespace winrt::HuffmanCompressionApp::implementation
 {
     struct Decompressor : DecompressorT<Decompressor>
     {
+        //Datafields
+        HWND WindowHandle;
+
         Decompressor();
 
         int32_t MyProperty();
         void MyProperty(int32_t value);
 
-        //Helpers
-        void WindowClickableToggle(bool isClickable);
-
         //Events
+        void OnNavigatedTo(Microsoft::UI::Xaml::Navigation::NavigationEventArgs const& e);
         void FileSelectButton_Click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e);
         void FolderSelectButton_Click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e);
+        void StartButton_Click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e);
     };
 }
 
