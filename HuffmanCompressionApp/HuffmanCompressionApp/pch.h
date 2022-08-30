@@ -27,3 +27,5 @@
 #include <winrt/Windows.UI.Xaml.Interop.h> //NEVER FORGET THIS AGAIN (necessary for NavigationView to work)
 #include <shobjidl_core.h> //Needed for the IFileOpenDialog
 #include <microsoft.ui.xaml.window.h> //Needed to get window handle (unless you use,GetActiveWindow())
+#include <thread>
+#include <winrt/Microsoft.UI.Dispatching.h>

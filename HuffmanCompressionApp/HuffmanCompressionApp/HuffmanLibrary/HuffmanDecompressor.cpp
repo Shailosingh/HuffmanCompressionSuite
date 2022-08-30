@@ -18,7 +18,7 @@ HuffmanDecompressor::HuffmanDecompressor()
 	ExitError = false;
 	BitCounter = 0;
 	TotalBitCount = 1;
-	StatusMessage = L"Ready to go!\n";
+	StatusMessage = L"Ready to go!";
 }
 
 //Public functions-----------------------------------------------------------------------------------------------------------
@@ -34,34 +34,34 @@ void HuffmanDecompressor::BeginDecompression(std::wstring inputFilePath, std::ws
 	//Ensure that input and output paths even exist
 	if (!fs::exists(inputPathObject))
 	{
-		SetupErrorMessage(L"The input file does not exist.\n");
+		SetupErrorMessage(L"The input file does not exist.");
 		return;
 	}
 
 	if (!fs::exists(outputPathObject))
 	{
-		SetupErrorMessage(L"The output folder does not exist.\n");
+		SetupErrorMessage(L"The output folder does not exist.");
 		return;
 	}
 
 	//Ensure that the input is an actual file
 	if (!fs::is_regular_file(inputPathObject))
 	{
-		SetupErrorMessage(L"The input file is not an actual file.\n");
+		SetupErrorMessage(L"The input file is not an actual file.");
 		return;
 	}
 
 	//Ensure that the input is an actual file
 	if (!fs::is_directory(outputPathObject))
 	{
-		SetupErrorMessage(L"The input file is not an actual file.\n");
+		SetupErrorMessage(L"The input file is not an actual file.");
 		return;
 	}
 
 	//Ensure that the input's extension is the correct one for files compressed with this program
 	if (inputPathObject.extension().wstring() != COMPRESSED_EXTENSION)
 	{
-		SetupErrorMessage(L"The input file is invalid. Wrong extension!\n");
+		SetupErrorMessage(L"The input file is invalid. Wrong extension!");
 		return;
 	}
 	FileAndDirectoryValidated = true;
@@ -72,7 +72,7 @@ void HuffmanDecompressor::BeginDecompression(std::wstring inputFilePath, std::ws
 	fileReader >> std::noskipws;
 	if (!fileReader)
 	{
-		SetupErrorMessage(L"Unable to open input file to be decompressed!\n");
+		SetupErrorMessage(L"Unable to open input file to be decompressed!");
 		return;
 	}
 
@@ -121,7 +121,7 @@ void HuffmanDecompressor::BeginDecompression(std::wstring inputFilePath, std::ws
 	fileReader.close();
 	
 	//Success reached
-	StatusMessage = L"Decompression Complete!\n";
+	StatusMessage = L"Decompression Complete!";
 	ExitError = false;
 	IsFinished = true;
 }
@@ -133,20 +133,20 @@ std::wstring HuffmanDecompressor::GetDecompressedFileExtension(std::ifstream& fi
 	uint16_t sizeOfExtension;
 	if (!fileReader.read(reinterpret_cast<char*>(&sizeOfExtension), sizeof(uint16_t)))
 	{
-		throw std::invalid_argument("Input file corrupt or catastrophic error occured!\n");
+		throw std::invalid_argument("Input file corrupt or catastrophic error occured!");
 	}
 
 	//If the sizeOfExtension-1 (to account for the null char) is more than the max filename size, the input file must be corrupt
 	if ((sizeOfExtension - 1) > MAX_FILENAME_LENGTH)
 	{
-		throw std::invalid_argument("Input file corrupt!\n");
+		throw std::invalid_argument("Input file corrupt!");
 	}
 
 	//Create buffer and fill it with the file extension
 	wchar_t* extensionBuffer = new wchar_t[sizeOfExtension];
 	if (!fileReader.read(reinterpret_cast<char*>(extensionBuffer), sizeof(wchar_t) * sizeOfExtension))
 	{
-		throw std::invalid_argument("Input file corrupt or catastrophic error occured!\n");
+		throw std::invalid_argument("Input file corrupt or catastrophic error occured!");
 	}
 	std::wstring extensionString(extensionBuffer);
 	
@@ -162,7 +162,7 @@ void HuffmanDecompressor::WriteDecompressedFile(fs::path& inputPathObject, fs::p
 	uint64_t totalBits;
 	if (!fileReader.read(reinterpret_cast<char*>(&totalBits), sizeof(uint64_t)))
 	{
-		throw std::invalid_argument("Input file corrupt or catastrophic error occured!\n");
+		throw std::invalid_argument("Input file corrupt or catastrophic error occured!");
 	}
 	TotalBitCount = totalBits;
 
@@ -178,13 +178,13 @@ void HuffmanDecompressor::WriteDecompressedFile(fs::path& inputPathObject, fs::p
 	outputWriter.open(outputFilePath, std::ios::binary);
 	if (!outputWriter)
 	{
-		throw std::invalid_argument("Error in creating and opening decompressed output file.\n");
+		throw std::invalid_argument("Error in creating and opening decompressed output file.");
 	}
 
 	//Use the huffman tree to finish the decompressed file
 	if (!huffmanTree->WriteDecompressedFile(fileReader, outputWriter, totalBits, BitCounter))
 	{
-		throw std::invalid_argument("Catastrophic error in reading the input file's huffman coding!\n");
+		throw std::invalid_argument("Catastrophic error in reading the input file's huffman coding!");
 	}
 
 	//Close up the output file
@@ -201,7 +201,7 @@ void HuffmanDecompressor::ResetMembers()
 	ExitError = false;
 	BitCounter = 0;
 	TotalBitCount = 1;
-	StatusMessage = L"Ready to go!\n";
+	StatusMessage = L"Ready to go!";
 }
 
 void HuffmanDecompressor::SetupErrorMessage(std::wstring errorMessage)

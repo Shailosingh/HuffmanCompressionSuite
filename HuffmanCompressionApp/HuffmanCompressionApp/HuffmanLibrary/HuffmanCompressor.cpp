@@ -16,7 +16,7 @@ HuffmanCompressor::HuffmanCompressor()
 	ExitError = false;
 	BitCounter = 0;
 	TotalBitCount = 1;
-	StatusMessage = L"Ready To Start!\n";
+	StatusMessage = L"Ready To Start!";
 }
 
 //Public functions-----------------------------------------------------------------------------------------------------------
@@ -32,27 +32,27 @@ void HuffmanCompressor::BeginCompression(std::wstring inputFilePath, std::wstrin
 	//Ensure that input and output paths even exist
 	if (!fs::exists(inputPathObject))
 	{
-		SetupErrorMessage(L"The input file does not exist.\n");
+		SetupErrorMessage(L"The input file does not exist.");
 		return;
 	}
 
 	if (!fs::exists(outputPathObject))
 	{
-		SetupErrorMessage(L"The output folder does not exist.\n");
+		SetupErrorMessage(L"The output folder does not exist.");
 		return;
 	}
 
 	//Ensure that the input is an actual file
 	if (!fs::is_regular_file(inputPathObject))
 	{
-		SetupErrorMessage(L"The input file is not an actual file.\n");
+		SetupErrorMessage(L"The input file is not an actual file.");
 		return;
 	}
 
 	//Ensure that the input is an actual file
 	if (!fs::is_directory(outputPathObject))
 	{
-		SetupErrorMessage(L"The input file is not an actual file.\n");
+		SetupErrorMessage(L"The input file is not an actual file.");
 		return;
 	}
 	FileAndDirectoryValidated = true;
@@ -88,7 +88,7 @@ void HuffmanCompressor::BeginCompression(std::wstring inputFilePath, std::wstrin
 	}
 
 	//If it got here, the compressed file is successfully created
-	StatusMessage = L"Compression Complete!\n";
+	StatusMessage = L"Compression Complete!";
 	ExitError = false;
 	IsFinished = true;
 }
@@ -103,7 +103,7 @@ void HuffmanCompressor::ResetMembers()
 	ExitError = false;
 	BitCounter = 0;
 	TotalBitCount = 1;
-	StatusMessage = L"Ready To Start!\n";
+	StatusMessage = L"Ready To Start!";
 }
 
 void HuffmanCompressor::SetupErrorMessage(std::wstring errorMessage)
@@ -126,7 +126,7 @@ void HuffmanCompressor::WriteCompressedFile(CharacterTable& table, std::wstring 
 	outputWriter.open(outputFilePath, std::ios::binary);
 	if (!outputWriter)
 	{
-		throw std::invalid_argument("Error in creating and opening compressed output file.\n");
+		throw std::invalid_argument("Error in creating and opening compressed output file.");
 	}
 
 	//Record the input file's size and its extension
@@ -166,7 +166,7 @@ void HuffmanCompressor::WriteCompressedFile(CharacterTable& table, std::wstring 
 	fileReader >> std::noskipws;
 	if (!fileReader)
 	{
-		throw std::invalid_argument("Unable to open input file to be compressed\n");
+		throw std::invalid_argument("Unable to open input file to be compressed");
 	}
 
 	//Go through every character in the input file and write their compressed binary codes to the output

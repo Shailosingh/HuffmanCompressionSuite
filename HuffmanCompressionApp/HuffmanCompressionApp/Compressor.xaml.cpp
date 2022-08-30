@@ -3,6 +3,7 @@
 #if __has_include("Compressor.g.cpp")
 #include "Compressor.g.cpp"
 #endif
+#include "HuffmanLibrary/HuffmanCompressor.h"
 
 using namespace winrt;
 using namespace Microsoft::UI::Xaml;
@@ -205,5 +206,108 @@ namespace winrt::HuffmanCompressionApp::implementation
     {
         //Disable the window
         EnableWindow(WindowHandle, false);
+
+        //Convert the file and folder directory boxes to strings
+        std::wstring inputFilePath(FileDirectoryBox().Text());
+        std::wstring outputFolderPath(FolderDirectoryBox().Text());
+
+        //Create the thread that manages compression
+        std::thread threadManager(&Compressor::CompressionThreadManager, this, inputFilePath, outputFolderPath);
+        threadManager.detach();
+    }
+
+    //Thread Functions-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+    void Compressor::CompressionThreadManager(std::wstring inputFilePath, std::wstring outputFolderPath)
+    {
+        //Initialize variables
+        HuffmanCompressor compressorObject;
+
+        //Reset the progress bar
+        DispatchToProgressBar(0, 1);
+
+        //Since BeginCompression() is not a static function, I must offer a pointer to the function and its object as the first two arguments
+        std::thread compressionThread(&HuffmanCompressor::BeginCompression, &compressorObject, inputFilePath, outputFolderPath);
+
+        DispatchToStatusBox(L"Paths being validated...");
+        while (!compressorObject.IsFinished && !compressorObject.FileAndDirectoryValidated);
+        if (compressorObject.ExitError)
+        {
+            compressionThread.join();
+            DispatchToStatusBox(compressorObject.StatusMessage.c_str());
+            EnableWindow(WindowHandle, true);
+            return;
+        }
+
+        DispatchToStatusBox(L"Character table being created...");
+        while (!compressorObject.IsFinished && !compressorObject.CharacterTableFinished);
+        if (compressorObject.ExitError)
+        {
+            compressionThread.join();
+            DispatchToStatusBox(compressorObject.StatusMessage.c_str());
+            EnableWindow(WindowHandle, true);
+            return;
+        }
+
+        DispatchToStatusBox(L"Binary codes being generated and recorded...");
+        while (!compressorObject.IsFinished && !compressorObject.BinaryCodesFound);
+        if (compressorObject.ExitError)
+        {
+            compressionThread.join();
+            DispatchToStatusBox(compressorObject.StatusMessage.c_str());
+            EnableWindow(WindowHandle, true);
+            return;
+        }
+
+        DispatchToStatusBox(L"Building compressed file...");
+        while (!compressorObject.IsFinished)
+        {
+            DispatchToProgressBar(compressorObject.BitCounter, compressorObject.TotalBitCount);
+        }
+
+        if (compressorObject.ExitError)
+        {
+            compressionThread.join();
+            DispatchToStatusBox(compressorObject.StatusMessage.c_str());
+            EnableWindow(WindowHandle, true);
+            return;
+        }
+
+        compressionThread.join();
+        DispatchToStatusBox(L"Compression Completed...");
+        EnableWindow(WindowHandle, true);
+    }
+
+    //Dispatcher functions-------------------------------------------------------------------------------------------------------------------------------------------------------------
+    void Compressor::DispatchToStatusBox(const wchar_t* statusText)
+    {
+        if (this->DispatcherQueue().HasThreadAccess())
+        {
+            StatusBox().Text(statusText);
+        }
+        else
+        {
+            bool isQueued = this->DispatcherQueue().TryEnqueue(Microsoft::UI::Dispatching::DispatcherQueuePriority::Normal,[statusText, this]()
+            {
+                StatusBox().Text(statusText);
+            });
+        }
+    }
+
+    void Compressor::DispatchToProgressBar(uint64_t bitCounter, uint64_t totalBits)
+    {
+        //Calculate the percentage
+        double percentProgress = (bitCounter * 100) / totalBits;
+
+        if (this->DispatcherQueue().HasThreadAccess())
+        {
+            ProgressBar().Value(percentProgress);
+        }
+        else
+        {
+            bool isQueued = this->DispatcherQueue().TryEnqueue(Microsoft::UI::Dispatching::DispatcherQueuePriority::Normal, [percentProgress, this]()
+            {
+                    ProgressBar().Value(percentProgress);
+            });
+        }
     }
 }

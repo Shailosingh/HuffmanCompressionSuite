@@ -4,6 +4,7 @@
 #include "Decompressor.g.cpp"
 #include "HuffmanLibrary/GeneralConstants.h"
 #endif
+#include "HuffmanLibrary/HuffmanDecompressor.h"
 
 using namespace winrt;
 using namespace Microsoft::UI::Xaml;
@@ -214,5 +215,119 @@ namespace winrt::HuffmanCompressionApp::implementation
         //Disable the window
         EnableWindow(WindowHandle, false);
 
+        //Initialize variables
+        HuffmanDecompressor decompressorObject;
+
+        //Convert the file and folder directory boxes to strings
+        std::wstring inputFilePath(FileDirectoryBox().Text());
+        std::wstring outputFolderPath(FolderDirectoryBox().Text());
+
+        //Create the thread that manages compression (not static function, so I must offer pointer to function and object)
+        std::thread threadManager(&Decompressor::DecompressionThreadManager, this, inputFilePath, outputFolderPath);
+        threadManager.detach();
+    }
+
+    //Thread Functions-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+    void Decompressor::DecompressionThreadManager(std::wstring inputFilePath, std::wstring outputFolderPath)
+    {
+        HuffmanDecompressor decompressorObject;
+
+        //Reset the progress bar
+        DispatchToProgressBar(0, 1);
+
+        //Since BeginDecompression() is not a static function, I must offer a pointer to the function and its object as the first two arguments
+        std::thread decompressionThread(&HuffmanDecompressor::BeginDecompression, &decompressorObject, inputFilePath, outputFolderPath);
+
+        DispatchToStatusBox(L"Paths being validated...");
+        while (!decompressorObject.IsFinished && !decompressorObject.FileAndDirectoryValidated);
+        if (decompressorObject.ExitError)
+        {
+            decompressionThread.join();
+            DispatchToStatusBox(decompressorObject.StatusMessage.c_str());
+            EnableWindow(WindowHandle, true);
+            return;
+        }
+
+        DispatchToStatusBox(L"Getting the file extension...");
+        while (!decompressorObject.IsFinished && !decompressorObject.RecordedFileExtension);
+        if (decompressorObject.ExitError)
+        {
+            decompressionThread.join();
+            DispatchToStatusBox(decompressorObject.StatusMessage.c_str());
+            EnableWindow(WindowHandle, true);
+            return;
+        }
+
+        DispatchToStatusBox(L"Generating the character table...");
+        while (!decompressorObject.IsFinished && !decompressorObject.CharacterTableFinished);
+        if (decompressorObject.ExitError)
+        {
+            decompressionThread.join();
+            DispatchToStatusBox(decompressorObject.StatusMessage.c_str());
+            EnableWindow(WindowHandle, true);
+            return;
+        }
+
+        DispatchToStatusBox(L"Constructing the huffman tree...");
+        while (!decompressorObject.IsFinished && !decompressorObject.TreeConstructed);
+        if (decompressorObject.ExitError)
+        {
+            decompressionThread.join();
+            DispatchToStatusBox(decompressorObject.StatusMessage.c_str());
+            EnableWindow(WindowHandle, true);
+            return;
+        }
+
+        DispatchToStatusBox(L"Building decompressed file...");
+        while (!decompressorObject.IsFinished)
+        {
+            DispatchToProgressBar(decompressorObject.BitCounter, decompressorObject.TotalBitCount);
+        }
+
+        if (decompressorObject.ExitError)
+        {
+            decompressionThread.join();
+            DispatchToStatusBox(decompressorObject.StatusMessage.c_str());
+            EnableWindow(WindowHandle, true);
+            return;
+        }
+
+        decompressionThread.join();
+        DispatchToStatusBox(L"Decompression successful");
+        EnableWindow(WindowHandle, true);
+    }
+
+    //Dispatcher functions-------------------------------------------------------------------------------------------------------------------------------------------------------------
+    void Decompressor::DispatchToStatusBox(const wchar_t* statusText)
+    {
+        if (this->DispatcherQueue().HasThreadAccess())
+        {
+            StatusBox().Text(statusText);
+        }
+        else
+        {
+            bool isQueued = this->DispatcherQueue().TryEnqueue(Microsoft::UI::Dispatching::DispatcherQueuePriority::Normal, [statusText, this]()
+                {
+                    StatusBox().Text(statusText);
+                });
+        }
+    }
+
+    void Decompressor::DispatchToProgressBar(uint64_t bitCounter, uint64_t totalBits)
+    {
+        //Calculate the percentage
+        double percentProgress = (bitCounter * 100) / totalBits;
+
+        if (this->DispatcherQueue().HasThreadAccess())
+        {
+            ProgressBar().Value(percentProgress);
+        }
+        else
+        {
+            bool isQueued = this->DispatcherQueue().TryEnqueue(Microsoft::UI::Dispatching::DispatcherQueuePriority::Normal, [percentProgress, this]()
+                {
+                    ProgressBar().Value(percentProgress);
+                });
+        }
     }
 }

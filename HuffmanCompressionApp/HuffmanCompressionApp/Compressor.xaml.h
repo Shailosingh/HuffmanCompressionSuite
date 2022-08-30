@@ -15,6 +15,11 @@ namespace winrt::HuffmanCompressionApp::implementation
         void MyProperty(int32_t value);
 
         //Thread functions
+        void CompressionThreadManager(std::wstring inputFilePath, std::wstring outputFolderPath);
+
+        //Dispatcher functions
+        void DispatchToStatusBox(const wchar_t* statusText);
+        void DispatchToProgressBar(uint64_t bitCounter, uint64_t totalBits);
 
         //Event handlers
         void OnNavigatedTo(Microsoft::UI::Xaml::Navigation::NavigationEventArgs const& e);
