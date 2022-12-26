@@ -1,4 +1,4 @@
-#include <pch.h>
+#include "pch.h"
 #include "HuffmanCompressor.h"
 #include "GeneralConstants.h"
 #include <fstream>
@@ -45,14 +45,21 @@ void HuffmanCompressor::BeginCompression(std::wstring inputFilePath, std::wstrin
 	//Ensure that the input is an actual file
 	if (!fs::is_regular_file(inputPathObject))
 	{
-		SetupErrorMessage(L"The input file is not an actual file.");
+		SetupErrorMessage(L"The input file specified is not an actual file.");
 		return;
 	}
 
-	//Ensure that the input is an actual file
+	//Ensure that the output is an actual directory
 	if (!fs::is_directory(outputPathObject))
 	{
-		SetupErrorMessage(L"The input file is not an actual file.");
+		SetupErrorMessage(L"The output folder specified is not an actual folder.");
+		return;
+	}
+
+	//Ensures the input file is not empty
+	if (fs::file_size(inputPathObject) == 0)
+	{
+		SetupErrorMessage(L"The input file is empty. The compression will not commence as there is no point!");
 		return;
 	}
 	FileAndDirectoryValidated = true;
