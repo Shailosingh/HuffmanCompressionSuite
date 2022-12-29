@@ -8,7 +8,7 @@
     mc:Ignorable="d">
 
     <Grid>
-        <NavigationView x:Name="HuffmanMenu" PaneTitle="Huffman Compressor" ItemInvoked="HuffmanMenu_ItemInvoked" IsSettingsVisible="False">
+        <NavigationView x:Name="HuffmanMenu" PaneTitle="Huffman Compression Suite" ItemInvoked="HuffmanMenu_ItemInvoked" IsSettingsVisible="False">
             <NavigationView.MenuItems>
                 <NavigationViewItem Icon="ZoomIn"  Content="Compress" Tag="Compressor"/>
                 <NavigationViewItem Icon="ZoomOut"  Content="Decompress" Tag="Decompressor"/>
