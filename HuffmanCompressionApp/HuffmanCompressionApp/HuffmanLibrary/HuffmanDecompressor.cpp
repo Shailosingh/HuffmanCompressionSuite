@@ -213,11 +213,12 @@ void HuffmanDecompressor::SetupErrorMessage(std::wstring errorMessage)
 
 std::wstring HuffmanDecompressor::ConvertNarrowStringToWideString(const std::string& narrowString) const
 {
-	//Allocates a wide string of appropriate size for conversion from narrow string
-	int neededWideBufferSize = MultiByteToWideChar(CP_UTF8, 0, narrowString.c_str(), -1, NULL, 0);
-	std::wstring wideString(neededWideBufferSize, 0);
+	//Allocates a wstring with appropriate number of characters (except for null) to take in the converted narrow string
+	size_t numberOfCharactersInWideString = MultiByteToWideChar(CP_UTF8, 0, narrowString.c_str(), -1, NULL, 0) - 1;
+	std::wstring wideString(numberOfCharactersInWideString, 0);
 
 	//Fills and returns the wide string
-	MultiByteToWideChar(CP_UTF8, 0, narrowString.c_str(), -1, &wideString[0], neededWideBufferSize);
+	MultiByteToWideChar(CP_UTF8, 0, narrowString.c_str(), -1, &wideString[0], numberOfCharactersInWideString);
+
 	return wideString;
 }
